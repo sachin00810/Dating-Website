@@ -21,6 +21,8 @@ export const useWebRTC = () => {
 
   const peerConnectionRef = useRef(null);
   const wsRef = useRef(null);
+  const reconnectAttempts = useRef(0);
+  const reconnectTimer = useRef(null);
 
   // 1. Get User Media
   const startLocalStream = useCallback(async () => {
@@ -90,7 +92,9 @@ export const useWebRTC = () => {
 
     wsRef.current.onopen = () => {
       console.log('WebSocket connected. Entering matchmaking queue...');
-      setConnectionState('idle'); // Or 'queued'
+      reconnectAttempts.current = 0;
+      useStore.setState({ matchStatus: 'searching' });
+      setConnectionState('connecting');
     };
 
     wsRef.current.onmessage = async (event) => {
@@ -143,6 +147,13 @@ export const useWebRTC = () => {
     wsRef.current.onclose = () => {
       console.log('WebSocket disconnected.');
       setConnectionState('disconnected');
+      // Auto-reconnect with exponential backoff
+      if (reconnectAttempts.current < 5) {
+        const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 16000);
+        reconnectAttempts.current += 1;
+        console.log(`Reconnecting in ${delay}ms (attempt ${reconnectAttempts.current})...`);
+        reconnectTimer.current = setTimeout(() => connectWebSocket(), delay);
+      }
     };
   }, [createPeerConnection, resetConnection, setConnectionState]);
 
@@ -172,6 +183,18 @@ export const useWebRTC = () => {
     resetConnection();
   }, [roomId, resetConnection]);
 
+  const skipToNext = useCallback(() => {
+    // Close current peer connection but keep WS alive
+    if (peerConnectionRef.current) {
+      peerConnectionRef.current.close();
+      peerConnectionRef.current = null;
+    }
+    sendMessage({ type: 'leave_room', roomId: useStore.getState().roomId });
+    useStore.setState({ remoteStream: null, matchStatus: 'searching', roomId: null, messages: [], isMuted: false, isVideoOff: false });
+    // Re-enter queue
+    sendMessage({ type: 'join_queue' });
+  }, []);
+
   const toggleAudio = useCallback(() => {
     if (localStream) {
       localStream.getAudioTracks().forEach((track) => {
@@ -195,6 +218,7 @@ export const useWebRTC = () => {
     return () => {
       if (peerConnectionRef.current) peerConnectionRef.current.close();
       if (wsRef.current) wsRef.current.close();
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
       const state = useStore.getState();
       if (state.localStream) {
         state.localStream.getTracks().forEach((track) => track.stop());
@@ -208,5 +232,6 @@ export const useWebRTC = () => {
     endCall,
     toggleAudio,
     toggleVideo,
+    skipToNext,
   };
 };

@@ -9,7 +9,7 @@ import { Video, VideoOff, PhoneOff, Search, MapPin, User, Users, Mic, MicOff, Sk
 export const VideoChat = () => {
   const navigate = useNavigate();
   const { localStream, remoteStream, matchStatus, connectionState, isMuted, isVideoOff, userProfile } = useStore();
-  const { startLocalStream, connectWebSocket, endCall, toggleAudio, toggleVideo } = useWebRTC();
+  const { startLocalStream, connectWebSocket, endCall, toggleAudio, toggleVideo, skipToNext } = useWebRTC();
 
   const handleDisconnect = () => {
     endCall();
@@ -140,7 +140,7 @@ export const VideoChat = () => {
                 <div className="w-px h-6 bg-white/10" />
 
                 <button 
-                  onClick={connectWebSocket}
+                  onClick={skipToNext}
                   className="p-2.5 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all"
                   title="Skip / Next"
                 >
