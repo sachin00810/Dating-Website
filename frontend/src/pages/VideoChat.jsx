@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { VideoPlayer } from '../components/VideoPlayer';
-import { Video, VideoOff, PhoneOff, Search } from 'lucide-react';
+import { Video, VideoOff, PhoneOff, Search, Filter, Grid } from 'lucide-react';
 
 export const VideoChat = () => {
   const { localStream, remoteStream, matchStatus, connectionState } = useStore();
@@ -33,14 +33,33 @@ export const VideoChat = () => {
       <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col md:flex-row gap-6 mb-6">
         
         {/* Left Panel - Discovery */}
-        <div className="flex-1 relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col items-center justify-center min-h-[500px]">
-          {matchStatus === 'searching' && (
-            <div className="flex flex-col items-center justify-center z-10 p-8 text-center">
-              <Search className="w-16 h-16 text-[#ff4b4b] animate-pulse mb-6" />
-              <h2 className="text-2xl font-bold text-white mb-2">Finding a Match...</h2>
-              <p className="text-gray-400">Looking for someone nearby</p>
+        <div className="flex-1 relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col p-6 min-h-[500px]">
+          {/* Header */}
+          <div className="flex justify-between items-center mb-6 z-10">
+            <h2 className="text-sm font-bold text-gray-400 tracking-wider">PROFILES NEARBY <span className="text-[#ff4b4b]">(ACTIVE)</span></h2>
+            <div className="flex gap-3">
+              <button className="p-2 hover:bg-white/10 rounded-lg transition-colors"><Filter className="w-5 h-5 text-gray-400" /></button>
+              <button className="p-2 hover:bg-white/10 rounded-lg transition-colors"><Grid className="w-5 h-5 text-gray-400" /></button>
             </div>
-          )}
+          </div>
+
+          {/* Profile Grid */}
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-3 flex-1 auto-rows-fr z-0">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <div key={i} className="rounded-xl overflow-hidden relative group bg-white/5 border border-white/5">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-rose-500/20 blur-xl group-hover:scale-110 transition-transform duration-700" />
+                <div className="absolute bottom-2 left-2 w-12 h-2 bg-white/20 rounded-full blur-[1px]" />
+                <div className="absolute bottom-2 left-16 w-6 h-2 bg-white/10 rounded-full blur-[1px]" />
+              </div>
+            ))}
+          </div>
+
+          {/* Central Overlay CTA */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none z-20">
+            <div className="bg-black/60 backdrop-blur-xl px-8 py-4 rounded-full border border-[#ff4b4b]/30 shadow-[0_0_40px_rgba(255,75,75,0.3)]">
+              <h2 className="text-lg font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">CONNECT WITH USERS</h2>
+            </div>
+          </div>
         </div>
 
         {/* Right Panel - Video Feed */}
