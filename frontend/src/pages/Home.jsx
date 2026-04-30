@@ -17,11 +17,33 @@ export const Home = () => {
     }
   };
 
-  const handleOnboardingSubmit = (data) => {
-    // Commit 5 will hook this up to Django.
-    setUserProfile(data);
-    setShowOnboarding(false);
-    navigate('/chat');
+  const handleOnboardingSubmit = async (data) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/profiles/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: data.name,
+          age: parseInt(data.age, 10),
+          address: data.address,
+          preferred_gender: data.preferredGender
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save profile');
+      }
+
+      const savedProfile = await response.json();
+      setUserProfile(savedProfile);
+      setShowOnboarding(false);
+      navigate('/chat');
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      alert('There was an error saving your profile. Please try again.');
+    }
   };
 
   return (
