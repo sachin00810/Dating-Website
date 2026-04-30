@@ -7,7 +7,7 @@ import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User, Users, M
 
 export const VideoChat = () => {
   const navigate = useNavigate();
-  const { localStream, remoteStream, matchStatus, connectionState, isMuted, isVideoOff } = useStore();
+  const { localStream, remoteStream, matchStatus, connectionState, isMuted, isVideoOff, userProfile } = useStore();
   const { startLocalStream, connectWebSocket, endCall, toggleAudio, toggleVideo } = useWebRTC();
 
   const handleDisconnect = () => {
@@ -16,9 +16,13 @@ export const VideoChat = () => {
   };
 
   useEffect(() => {
-    // Request camera as soon as we enter the page
+    if (!userProfile) {
+      navigate('/');
+      return;
+    }
+    // Request camera as soon as we enter the page, post-onboarding
     startLocalStream();
-  }, [startLocalStream]);
+  }, [startLocalStream, userProfile, navigate]);
 
   return (
     <div className="min-h-screen bg-[#111111] p-4 flex flex-col">
