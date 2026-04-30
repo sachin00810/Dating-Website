@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { VideoPlayer } from '../components/VideoPlayer';
-import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User } from 'lucide-react';
+import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User, Users } from 'lucide-react';
 
 export const VideoChat = () => {
   const { localStream, remoteStream, matchStatus, connectionState } = useStore();
@@ -16,16 +16,28 @@ export const VideoChat = () => {
   return (
     <div className="min-h-screen bg-[#111111] p-4 flex flex-col">
       {/* Header */}
-      <header className="flex justify-between items-center py-4 px-6 bg-[#222222] rounded-full mb-6">
+      <header className="flex justify-between items-center py-4 px-6 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl mb-6 shadow-xl">
         <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
           <span className="text-[#ff4b4b]">Match</span> <span className="font-medium text-gray-300">& Chat</span>
         </h1>
-        <div className="flex items-center gap-3">
-          <div className={`w-3 h-3 rounded-full ${
-            connectionState === 'connected' ? 'bg-green-500' : 
-            connectionState === 'connecting' ? 'bg-yellow-500' : 'bg-gray-500'
-          }`} />
-          <span className="text-sm font-medium text-gray-300 capitalize">{connectionState}</span>
+        
+        <div className="flex items-center gap-8">
+          {/* Global Users Stat */}
+          <div className="hidden md:flex items-center gap-2 text-gray-400 font-medium">
+            <Users className="w-4 h-4" />
+            <span className="tracking-wide text-sm">GLOBAL USERS: <span className="text-white font-bold">145K+</span></span>
+          </div>
+
+          {/* Network Status */}
+          <div className="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-full border border-white/10">
+            <div className={`w-2.5 h-2.5 rounded-full shadow-[0_0_10px_currentColor] ${
+              connectionState === 'connected' ? 'bg-green-500 text-green-500' : 
+              connectionState === 'connecting' ? 'bg-yellow-500 text-yellow-500 animate-pulse' : 'bg-gray-500 text-gray-500'
+            }`} />
+            <span className="text-[10px] font-bold text-gray-300 tracking-widest uppercase">
+              NETWORK: <span className="text-white">{connectionState} {connectionState === 'connecting' && '(Connecting...)'}</span>
+            </span>
+          </div>
         </div>
       </header>
 
