@@ -103,27 +103,42 @@ export const VideoChat = () => {
       </main>
 
       {/* Controls */}
-      <footer className="flex justify-center items-center gap-6 py-4">
+      <footer className="flex flex-col items-center gap-4 py-6 mt-auto">
+        <p className="text-gray-400 text-sm tracking-widest uppercase">Connect below...</p>
+        
         {matchStatus === 'idle' || matchStatus === 'searching' ? (
-          <button 
-            onClick={connectWebSocket}
-            className="px-8 py-4 bg-[#ff4b4b] hover:bg-[#ff2d2d] transition-colors rounded-full font-bold text-lg flex items-center gap-3 shadow-[0_0_20px_rgba(255,75,75,0.4)]"
-          >
-            <Search className="w-6 h-6" />
-            Find Match
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-3xl justify-center">
+            {/* Primary CTA */}
+            <button 
+              onClick={connectWebSocket}
+              className="group relative px-8 py-4 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 transition-all rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-[0_0_30px_rgba(244,63,94,0.3)] hover:shadow-[0_0_40px_rgba(244,63,94,0.5)] hover:scale-105 duration-300 w-full sm:w-auto overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <Search className="w-6 h-6 relative z-10" />
+              <span className="relative z-10 text-white drop-shadow-md">Explore Match (Nearby)</span>
+            </button>
+
+            {/* Secondary CTA */}
+            <button 
+              onClick={connectWebSocket}
+              className="group relative px-8 py-4 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 transition-all rounded-2xl font-bold text-lg flex items-center justify-center gap-3 shadow-xl hover:scale-105 duration-300 w-full sm:w-auto"
+            >
+              <Video className="w-6 h-6 text-gray-300 group-hover:text-white transition-colors" />
+              <span className="text-gray-300 group-hover:text-white transition-colors">Live Video Chat (Random)</span>
+            </button>
+          </div>
         ) : (
-          <>
-            <button className="p-4 bg-gray-800 hover:bg-gray-700 rounded-full transition-colors">
+          <div className="flex justify-center items-center gap-6">
+            <button className="p-5 bg-white/5 hover:bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl transition-all hover:scale-105">
               <Video className="w-6 h-6 text-white" />
             </button>
             <button 
               onClick={endCall}
-              className="p-5 bg-red-600 hover:bg-red-500 rounded-full transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)]"
+              className="p-5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 rounded-2xl transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:scale-105"
             >
-              <PhoneOff className="w-8 h-8 text-white" />
+              <PhoneOff className="w-8 h-8 text-white drop-shadow-md" />
             </button>
-          </>
+          </div>
         )}
       </footer>
     </div>
