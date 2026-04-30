@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { VideoPlayer } from '../components/VideoPlayer';
-import { Video, VideoOff, PhoneOff, Search, Filter, Grid } from 'lucide-react';
+import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User } from 'lucide-react';
 
 export const VideoChat = () => {
   const { localStream, remoteStream, matchStatus, connectionState } = useStore();
@@ -64,13 +64,27 @@ export const VideoChat = () => {
 
         {/* Right Panel - Video Feed */}
         <div className="flex-1 relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl min-h-[500px] flex flex-col p-2">
-          <div className="flex-1 relative overflow-hidden rounded-2xl bg-black/50">
+          {/* Main Remote Video Container */}
+          <div className="flex-1 relative overflow-hidden rounded-2xl bg-black/50 border border-white/5">
             <VideoPlayer stream={remoteStream} isLocal={false} />
+            
+            {/* Integrated Profile Card Overlay */}
+            <div className="absolute bottom-4 left-4 right-28 bg-black/40 backdrop-blur-md border border-white/10 p-4 rounded-xl flex justify-between items-end">
+              <div>
+                <h3 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">Alex, 24 <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" /></h3>
+                <p className="text-gray-300 text-sm flex items-center gap-1"><MapPin className="w-4 h-4 text-[#ff4b4b]" /> Near You (2km)</p>
+              </div>
+            </div>
           </div>
           
           {/* Local Video - Floating overlay in the right panel */}
           <div className="w-32 h-48 absolute bottom-6 right-6 z-20 shadow-[0_8px_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/20 overflow-hidden bg-black">
             <VideoPlayer stream={localStream} isLocal={true} />
+            {/* Persistent YOU tag */}
+            <div className="absolute top-2 left-2 bg-black/60 backdrop-blur-md px-2 py-1 rounded-md border border-white/10 flex items-center gap-1">
+              <User className="w-3 h-3 text-white" />
+              <span className="text-[10px] font-bold text-white tracking-wider">YOU</span>
+            </div>
           </div>
         </div>
 
