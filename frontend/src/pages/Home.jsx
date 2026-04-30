@@ -1,8 +1,28 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Video, Heart, Shield, Sparkles } from 'lucide-react';
+import { OnboardingModal } from '../components/OnboardingModal';
+import { useStore } from '../store/useStore';
 
 export const Home = () => {
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const { userProfile, setUserProfile } = useStore();
+
+  const handleStartChat = () => {
+    if (!userProfile) {
+      setShowOnboarding(true);
+    } else {
+      navigate('/chat');
+    }
+  };
+
+  const handleOnboardingSubmit = (data) => {
+    // Commit 5 will hook this up to Django.
+    setUserProfile(data);
+    setShowOnboarding(false);
+    navigate('/chat');
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0b10] flex flex-col items-center justify-center p-4 relative overflow-hidden">
@@ -36,7 +56,7 @@ export const Home = () => {
         </div>
 
         <button 
-          onClick={() => navigate('/chat')}
+          onClick={handleStartChat}
           className="group relative px-12 py-5 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 transition-all rounded-full font-bold text-xl flex items-center justify-center gap-4 shadow-[0_0_40px_rgba(244,63,94,0.3)] hover:shadow-[0_0_60px_rgba(244,63,94,0.5)] hover:scale-105 duration-300 mx-auto overflow-hidden"
         >
           <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
@@ -44,6 +64,13 @@ export const Home = () => {
           <span className="relative z-10 text-white drop-shadow-md">Live Video Chat</span>
         </button>
       </div>
+
+      {showOnboarding && (
+        <OnboardingModal 
+          onSubmit={handleOnboardingSubmit} 
+          onClose={() => setShowOnboarding(false)} 
+        />
+      )}
     </div>
   );
 };

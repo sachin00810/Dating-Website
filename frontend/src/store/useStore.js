@@ -9,6 +9,9 @@ export const useStore = create((set, get) => ({
   isMuted: false,
   isVideoOff: false,
   
+  // User Profile
+  userProfile: null,
+  
   // Connection Status
   connectionState: 'idle', // idle, connecting, connected, disconnected
   matchStatus: 'searching', // searching, matched, idle
@@ -22,6 +25,7 @@ export const useStore = create((set, get) => ({
   setConnectionState: (state) => set({ connectionState: state }),
   setMatchStatus: (status) => set({ matchStatus: status }),
   setRoomId: (id) => set({ roomId: id }),
+  setUserProfile: (profile) => set({ userProfile: profile }),
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
   toggleVideoOff: () => set((state) => ({ isVideoOff: !state.isVideoOff })),
   
