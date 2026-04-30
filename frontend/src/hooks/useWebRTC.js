@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useStore } from '../store/useStore';
+import { WS_BASE_URL } from '../lib/config';
 
 const STUN_SERVERS = {
   iceServers: [
@@ -80,8 +81,7 @@ export const useWebRTC = () => {
   }, [localStream, setRemoteStream, setConnectionState, resetConnection]);
 
   // 3. WebSocket Signaling Logic
-  // Replace WS_URL with your backend URL once ready
-  const WS_URL = 'ws://localhost:8000/ws/chat/'; 
+  const WS_URL = `${WS_BASE_URL}/ws/chat/`; 
   
   const connectWebSocket = useCallback(() => {
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
@@ -195,6 +195,10 @@ export const useWebRTC = () => {
     return () => {
       if (peerConnectionRef.current) peerConnectionRef.current.close();
       if (wsRef.current) wsRef.current.close();
+      const state = useStore.getState();
+      if (state.localStream) {
+        state.localStream.getTracks().forEach((track) => track.stop());
+      }
     };
   }, []);
 

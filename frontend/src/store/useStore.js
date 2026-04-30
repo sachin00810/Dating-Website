@@ -12,9 +12,12 @@ export const useStore = create((set, get) => ({
   // User Profile
   userProfile: null,
   
+  // Messages
+  messages: [],
+  
   // Connection Status
   connectionState: 'idle', // idle, connecting, connected, disconnected
-  matchStatus: 'searching', // searching, matched, idle
+  matchStatus: 'idle', // idle, searching, matched
   
   // Current Room
   roomId: null,
@@ -28,16 +31,19 @@ export const useStore = create((set, get) => ({
   setUserProfile: (profile) => set({ userProfile: profile }),
   toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
   toggleVideoOff: () => set((state) => ({ isVideoOff: !state.isVideoOff })),
+  addMessage: (msg) => set((state) => ({ messages: [...state.messages, msg] })),
+  clearMessages: () => set({ messages: [] }),
   
   // Reset for next match
   resetConnection: () => {
-    const { localStream } = get();
-    // Keep localStream alive, clear the rest
     set({
       remoteStream: null,
       connectionState: 'idle',
-      matchStatus: 'searching',
-      roomId: null
+      matchStatus: 'idle',
+      roomId: null,
+      isMuted: false,
+      isVideoOff: false,
+      messages: [],
     });
   }
 }));

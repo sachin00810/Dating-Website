@@ -149,7 +149,7 @@ export const VideoChat = () => {
       <footer className="flex flex-col items-center gap-4 py-6 mt-auto">
         <p className="text-gray-400 text-sm tracking-widest uppercase">Connect below...</p>
         
-        {matchStatus === 'idle' || matchStatus === 'searching' ? (
+        {(matchStatus === 'idle' || matchStatus === 'searching') ? (
           <div className="flex flex-col sm:flex-row gap-4 w-full max-w-3xl justify-center">
             {/* Primary CTA */}
             <button 

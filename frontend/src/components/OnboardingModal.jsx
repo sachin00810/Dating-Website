@@ -11,11 +11,16 @@ export const OnboardingModal = ({ onSubmit, onClose }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.age || !formData.address) {
+    if (!formData.name.trim() || !formData.age || !formData.address.trim()) {
       alert('Please fill out all fields.');
       return;
     }
-    onSubmit(formData);
+    const age = parseInt(formData.age, 10);
+    if (isNaN(age) || age < 18 || age > 100) {
+      alert('Please enter a valid age between 18 and 100.');
+      return;
+    }
+    onSubmit({ ...formData, age });
   };
 
   return (

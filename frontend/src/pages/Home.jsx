@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Video, Heart, Shield, Sparkles } from 'lucide-react';
 import { OnboardingModal } from '../components/OnboardingModal';
 import { useStore } from '../store/useStore';
+import { API_BASE_URL } from '../lib/config';
 
 export const Home = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const Home = () => {
 
   const handleOnboardingSubmit = async (data) => {
     try {
-      const response = await fetch('http://localhost:8000/api/profiles/', {
+      const response = await fetch(`${API_BASE_URL}/api/profiles/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
