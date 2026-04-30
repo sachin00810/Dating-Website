@@ -29,24 +29,30 @@ export const VideoChat = () => {
         </div>
       </header>
 
-      {/* Main Video Area */}
-      <main className="flex-1 flex flex-col md:flex-row gap-4 mb-6 relative">
+      {/* Main Content Area */}
+      <main className="flex-1 w-full max-w-7xl mx-auto flex flex-col md:flex-row gap-6 mb-6">
         
-        {/* Remote Video (Main focus) */}
-        <div className="flex-1 relative rounded-2xl overflow-hidden bg-black/50 border border-gray-800 shadow-xl">
+        {/* Left Panel - Discovery */}
+        <div className="flex-1 relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl flex flex-col items-center justify-center min-h-[500px]">
           {matchStatus === 'searching' && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center z-10 bg-black/60 backdrop-blur-sm">
+            <div className="flex flex-col items-center justify-center z-10 p-8 text-center">
               <Search className="w-16 h-16 text-[#ff4b4b] animate-pulse mb-6" />
               <h2 className="text-2xl font-bold text-white mb-2">Finding a Match...</h2>
               <p className="text-gray-400">Looking for someone nearby</p>
             </div>
           )}
-          <VideoPlayer stream={remoteStream} isLocal={false} />
         </div>
 
-        {/* Local Video (Floating on mobile, side on desktop) */}
-        <div className="w-full md:w-1/3 lg:w-1/4 h-64 md:h-auto absolute bottom-4 right-4 md:relative md:bottom-0 md:right-0 z-20 shadow-2xl rounded-2xl border border-gray-700 overflow-hidden">
-          <VideoPlayer stream={localStream} isLocal={true} />
+        {/* Right Panel - Video Feed */}
+        <div className="flex-1 relative rounded-3xl overflow-hidden bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl min-h-[500px] flex flex-col p-2">
+          <div className="flex-1 relative overflow-hidden rounded-2xl bg-black/50">
+            <VideoPlayer stream={remoteStream} isLocal={false} />
+          </div>
+          
+          {/* Local Video - Floating overlay in the right panel */}
+          <div className="w-32 h-48 absolute bottom-6 right-6 z-20 shadow-[0_8px_30px_rgba(0,0,0,0.5)] rounded-xl border border-white/20 overflow-hidden bg-black">
+            <VideoPlayer stream={localStream} isLocal={true} />
+          </div>
         </div>
 
       </main>
