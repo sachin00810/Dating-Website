@@ -152,14 +152,25 @@ export const useWebRTC = () => {
     }
   };
 
-  const endCall = () => {
+  const endCall = useCallback(() => {
     if (peerConnectionRef.current) {
       peerConnectionRef.current.close();
       peerConnectionRef.current = null;
     }
-    sendMessage({ type: 'leave_room', roomId });
+    if (wsRef.current) {
+      sendMessage({ type: 'leave_room', roomId });
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+
+    const state = useStore.getState();
+    if (state.localStream) {
+      state.localStream.getTracks().forEach((track) => track.stop());
+      state.setLocalStream(null);
+    }
+
     resetConnection();
-  };
+  }, [roomId, resetConnection]);
 
   const toggleAudio = useCallback(() => {
     if (localStream) {

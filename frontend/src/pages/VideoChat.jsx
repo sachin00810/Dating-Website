@@ -1,12 +1,19 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User, Users, Mic, MicOff } from 'lucide-react';
 
 export const VideoChat = () => {
+  const navigate = useNavigate();
   const { localStream, remoteStream, matchStatus, connectionState, isMuted, isVideoOff } = useStore();
   const { startLocalStream, connectWebSocket, endCall, toggleAudio, toggleVideo } = useWebRTC();
+
+  const handleDisconnect = () => {
+    endCall();
+    navigate('/');
+  };
 
   useEffect(() => {
     // Request camera as soon as we enter the page
@@ -112,7 +119,7 @@ export const VideoChat = () => {
                 <div className="w-px h-8 bg-white/10 mx-2" />
                 
                 <button 
-                  onClick={endCall}
+                  onClick={handleDisconnect}
                   className="px-6 py-3 bg-red-600 hover:bg-red-500 rounded-full font-bold text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-all hover:scale-105 flex items-center gap-2"
                 >
                   <PhoneOff className="w-4 h-4" /> Disconnect
@@ -165,7 +172,7 @@ export const VideoChat = () => {
               <Video className="w-6 h-6 text-white" />
             </button>
             <button 
-              onClick={endCall}
+              onClick={handleDisconnect}
               className="p-5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 rounded-2xl transition-all shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:scale-105"
             >
               <PhoneOff className="w-8 h-8 text-white drop-shadow-md" />
