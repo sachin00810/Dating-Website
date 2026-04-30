@@ -17,8 +17,8 @@ export const VideoChat = () => {
     <div className="min-h-screen bg-[#111111] p-4 flex flex-col">
       {/* Header */}
       <header className="flex justify-between items-center py-4 px-6 bg-[#222222] rounded-full mb-6">
-        <h1 className="text-xl font-bold text-white flex items-center gap-2">
-          <span className="text-[#ff4b4b]">Match</span> & Chat
+        <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
+          <span className="text-[#ff4b4b]">Match</span> <span className="font-medium text-gray-300">& Chat</span>
         </h1>
         <div className="flex items-center gap-3">
           <div className={`w-3 h-3 rounded-full ${
