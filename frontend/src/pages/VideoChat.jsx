@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { useWebRTC } from '../hooks/useWebRTC';
 import { VideoPlayer } from '../components/VideoPlayer';
-import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User, Users } from 'lucide-react';
+import { Video, VideoOff, PhoneOff, Search, Filter, Grid, MapPin, User, Users, Mic, MicOff } from 'lucide-react';
 
 export const VideoChat = () => {
-  const { localStream, remoteStream, matchStatus, connectionState } = useStore();
-  const { startLocalStream, connectWebSocket, endCall } = useWebRTC();
+  const { localStream, remoteStream, matchStatus, connectionState, isMuted, isVideoOff } = useStore();
+  const { startLocalStream, connectWebSocket, endCall, toggleAudio, toggleVideo } = useWebRTC();
 
   useEffect(() => {
     // Request camera as soon as we enter the page
@@ -85,12 +85,40 @@ export const VideoChat = () => {
             <VideoPlayer stream={remoteStream} isLocal={false} />
             
             {/* Integrated Profile Card Overlay */}
-            <div className="absolute bottom-4 left-4 right-28 bg-black/40 backdrop-blur-md border border-white/10 p-4 rounded-xl flex justify-between items-end">
+            <div className="absolute top-4 left-4 right-28 bg-black/40 backdrop-blur-md border border-white/10 p-4 rounded-xl flex justify-between items-end z-10">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">Alex, 24 <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.8)]" /></h3>
                 <p className="text-gray-300 text-sm flex items-center gap-1"><MapPin className="w-4 h-4 text-[#ff4b4b]" /> Near You (2km)</p>
               </div>
             </div>
+
+            {/* Interactive Media Control Bar */}
+            {matchStatus === 'matched' && (
+              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-xl border border-white/10 px-6 py-3 rounded-full flex items-center gap-4 shadow-2xl z-30">
+                <button 
+                  onClick={toggleAudio}
+                  className={`p-3 rounded-full transition-all ${isMuted ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                >
+                  {isMuted ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+                </button>
+                
+                <button 
+                  onClick={toggleVideo}
+                  className={`p-3 rounded-full transition-all ${isVideoOff ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-white/10 text-white hover:bg-white/20'}`}
+                >
+                  {isVideoOff ? <VideoOff className="w-5 h-5" /> : <Video className="w-5 h-5" />}
+                </button>
+                
+                <div className="w-px h-8 bg-white/10 mx-2" />
+                
+                <button 
+                  onClick={endCall}
+                  className="px-6 py-3 bg-red-600 hover:bg-red-500 rounded-full font-bold text-white shadow-[0_0_15px_rgba(220,38,38,0.5)] transition-all hover:scale-105 flex items-center gap-2"
+                >
+                  <PhoneOff className="w-4 h-4" /> Disconnect
+                </button>
+              </div>
+            )}
           </div>
           
           {/* Local Video - Floating overlay in the right panel */}
