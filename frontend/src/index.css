@@ -6,6 +6,19 @@
   --color-primary-hover: #ff2d2d;
   --color-dark-bg: #0a0b10;
   --color-dark-surface: #13151a;
+
+  --animate-border-pulse: border-pulse 4s ease-in-out infinite;
+  --animate-fade-in-up: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  @keyframes border-pulse {
+    0%, 100% { border-color: rgba(255, 255, 255, 0.1); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    50% { border-color: rgba(255, 75, 75, 0.3); box-shadow: 0 0 30px rgba(255, 75, 75, 0.15); }
+  }
+
+  @keyframes fade-in-up {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
 }
 
 body {
