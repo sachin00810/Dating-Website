@@ -5,6 +5,10 @@ export const useStore = create((set, get) => ({
   localStream: null,
   remoteStream: null,
   
+  // Media State
+  isMuted: false,
+  isVideoOff: false,
+  
   // Connection Status
   connectionState: 'idle', // idle, connecting, connected, disconnected
   matchStatus: 'searching', // searching, matched, idle
@@ -18,6 +22,8 @@ export const useStore = create((set, get) => ({
   setConnectionState: (state) => set({ connectionState: state }),
   setMatchStatus: (status) => set({ matchStatus: status }),
   setRoomId: (id) => set({ roomId: id }),
+  toggleMute: () => set((state) => ({ isMuted: !state.isMuted })),
+  toggleVideoOff: () => set((state) => ({ isVideoOff: !state.isVideoOff })),
   
   // Reset for next match
   resetConnection: () => {

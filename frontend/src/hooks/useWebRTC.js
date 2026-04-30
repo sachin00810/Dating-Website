@@ -161,6 +161,24 @@ export const useWebRTC = () => {
     resetConnection();
   };
 
+  const toggleAudio = useCallback(() => {
+    if (localStream) {
+      localStream.getAudioTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      useStore.getState().toggleMute();
+    }
+  }, [localStream]);
+
+  const toggleVideo = useCallback(() => {
+    if (localStream) {
+      localStream.getVideoTracks().forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      useStore.getState().toggleVideoOff();
+    }
+  }, [localStream]);
+
   // Cleanup
   useEffect(() => {
     return () => {
@@ -173,5 +191,7 @@ export const useWebRTC = () => {
     startLocalStream,
     connectWebSocket,
     endCall,
+    toggleAudio,
+    toggleVideo,
   };
 };
